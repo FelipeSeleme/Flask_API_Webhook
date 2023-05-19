@@ -8,7 +8,19 @@
         <small>Digite o e-mail do aluno para buscar informações</small>
         <form method="POST" action="{{ url_for('pesquisa') }}" style="width: 480px;" class="mt-4">
             {{ form.csrf_token }}
-            {{ form.email.label(class="form-control-label") }} {{ form.email(class="form-control") }}
+            {{ form.email.label(class="form-control-label") }}
+
+            {% if form.email.errors %}
+                {{ form.email(class="form-control is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for erro in form.email.errors %}
+                        {{ erro }}
+                    {% endfor %}
+                </div>
+            {% else %}
+
+                {{ form.email(class="form-control") }}
+            {% endif %}
             {{ form.botao_submit(class="btn btn-primary mt-2") }}
         </form>
     </body>
