@@ -26,7 +26,10 @@ def pesquisa():
     if form_pesquisa.validate_on_submit():
         email_pesquisa = form_pesquisa.email.data.strip()
         resultados = Webhook.query.filter_by(email=email_pesquisa).all()
-        return render_template('resultado_pesquisa.html', resultados=resultados)
+        if resultados:
+            return render_template('resultado_pesquisa.html', resultados=resultados)
+        else:
+            flash('E-mail não encontrado na base de dados. Certifique-se de ter digitado corretamente.', 'alert-danger')
     return render_template('pesquisa.html', form=form_pesquisa)
 
 
@@ -57,7 +60,6 @@ def criarconta():
         database.session.add(usuario)
         database.session.commit()
 
-        # Realiza o login automático do usuário recém-criado
         login_user(usuario)
 
         flash(f'Conta criada para o e-mail: {form_criarconta.email.data}', 'alert-success')
