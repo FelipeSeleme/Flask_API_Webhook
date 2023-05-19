@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<div class="container mt-2">
+    <h1>Resultado da Pesquisa</h1>
+    {% if resultados %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Status</th>
+                    <th>Valor</th>
+                    <th>Forma de Pagamento</th>
+                    <th>Parcelas</th>
+                    <th>[REGISTRO DE EVENTOS]</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for resultado in resultados|reverse %}
+                    <tr>
+                        <td>{{ resultado.data_evento.strftime('%d/%m/%Y %H:%M') }}</td>
+                        <td>{{ resultado.nome }}</td>
+                        <td>{{ resultado.email }}</td>
+                        <td>{{ resultado.status }}</td>
+                        <td>{{ resultado.valor }}</td>
+                        <td>{{ resultado.forma_pagamento }}</td>
+                        <td>{{ resultado.parcelas }}</td>
+                        <td>{{ resultado.evento }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Nenhum resultado encontrado para o e-mail informado.</p>
+    {% endif %}
+</div>
+<div class="row mt-5">
+
+</div>
+{% endblock %}

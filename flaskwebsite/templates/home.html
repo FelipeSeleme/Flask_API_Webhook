@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container mt-2">
+    <h1>Bem vindo!</h1>
+    <p>Projeto: Teste para Desenvolvedor Python Hashtag.<br>
+        Esse sistema foi desenvolvido em
+        <a style="text-decoration: none" href="https://www.python.org/">Python</a> com
+        <a style="text-decoration: none" href="https://flask.palletsprojects.com/">Flask</a> e
+        <a style="text-decoration: none" href="https://getbootstrap.com/">Bootstrap</a> por
+        <a style="text-decoration: none" href="https://www.linkedin.com/in/felipeselemeribeiro/">Felipe Seleme Ribeiro</a>.
+    </p>
+    <hr>
+    ⚠️ Somente pessoas autorizadas podem acessar ao sistema.<br>
+    Para utilizar as informações e recursos, é necessário
+    <a style="text-decoration: none" href="{{ url_for('criarconta') }}">criar uma conta</a> e
+    <a style="text-decoration: none" href="{{ url_for('login') }}">fazer login</a>.<br><br><br>
+        <p>
+            <strong>Objetivo:</strong> Criar uma API que receba Webhooks de um simulador, fazer as tratativas e armazenar os dados em um banco de dados.
+        </p><br>
+        <p>
+            O sistema foi elaborado para ser funcional, simples e intuitivo em sua aplicação.<br>
+            Ele possui um gerenciamento de usuários para acesso às informações (é necessário criar uma conta e estar logado).<br>
+            Estando logado, o usuário tem acesso às duas abas de consulta: <strong>[PESQUISA]</strong> e <strong> Webhooks</strong>.
+        </p>
+        <p>
+            <strong>[PESQUISA]</strong>: Busca pelos registros de uma pessoa específica por meio do seu e-mail.<br>
+            <strong>Webhooks</strong>: Lista em uma tabela os últimos registros recebidos e as tratativas realizadas pelo sistema.<br><br>
+        </p>
+        <p>
+            <small>Em caso de dúvidas, entre em contato através do e-mail: felipeselemeribeiro@gmail.com</small>
+        </p>
+
+        <div class="container mt-2">
+            {% for post in posts %}
+            <div class="row mt-4 p-3 meupost">
+                <div class="col col-2">
+                    <div class="image pe-2">
+                        <img src="{{ url_for('static', filename='fotos_perfil/{}'.format(post.autor.foto_perfil)) }}" class="rounded" width="100" >
+                    </div>
+                    <strong>{{ post.autor.username }}</strong>
+                </div>
+                <div class="col col-10">
+                    <a style="text-decoration: none" href="{{ url_for('exibir_post', post_id=post.id) }}"><h3>{{ post.titulo }}</h3></a>
+                    <p> {{ post.corpo }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+</div>
+{% endblock %}

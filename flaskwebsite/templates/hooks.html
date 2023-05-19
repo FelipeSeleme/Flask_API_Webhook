@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<div class="container mt-2">
+    <h1>Webhooks</h1>
+    {% if lista_hooks %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Status</th>
+                    <th>Valor</th>
+                    <th>Forma de Pagamento</th>
+                    <th>Parcelas</th>
+                    <th>[REGISTRO DE EVENTOS]</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for hook in lista_hooks|reverse %}
+                    <tr>
+                        <td>{{ hook.data_evento.strftime('%d/%m/%Y %H:%M') }}</td>
+                        <td>{{ hook.nome }}</td>
+                        <td>{{ hook.email }}</td>
+                        <td>{{ hook.status }}</td>
+                        <td>{{ hook.valor }}</td>
+                        <td>{{ hook.forma_pagamento }}</td>
+                        <td>{{ hook.parcelas }}</td>
+                        <td>{{ hook.evento }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Nenhum resultado encontrado.</p>
+    {% endif %}
+</div>
+<div class="row mt-5">
+
+</div>
+{% endblock %}

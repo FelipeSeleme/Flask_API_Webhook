@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<div class="container mt-2">
+    <body>
+        <h3>Pesquisa de eventos por aluno</h3>
+        <small>Digite o e-mail do aluno para buscar informações</small>
+        <form method="POST" action="{{ url_for('pesquisa') }}" style="width: 480px;" class="mt-4">
+            {{ form.csrf_token }}
+            {{ form.email.label(class="form-control-label") }} {{ form.email(class="form-control") }}
+            {{ form.botao_submit(class="btn btn-primary mt-2") }}
+        </form>
+    </body>
+</div>
+
+
+{% endblock %}
