@@ -17,9 +17,8 @@ class FormCriarConta(FlaskForm):
             raise ValidationError('E-mail já cadastrado. Cadastre-se com outro e-mail ou faça login para continuar.')
 
     def validate_token(self, token):
-        if token.data != '':  # INSERIR O TOKEN AQUI! <<<
+        if token.data != 'uhdfaAADF123':
             raise ValidationError('Token inválido.')
-
 
 
 class FormLogin(FlaskForm):
