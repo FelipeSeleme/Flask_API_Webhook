@@ -19,7 +19,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for hook in lista_hooks|reverse %}
+                {% for hook in lista_hooks %}
                     <tr>
                         <td>{{ hook.data_evento.strftime('%d/%m/%Y %H:%M') }}</td>
                         <td>{{ hook.nome }}</td>
