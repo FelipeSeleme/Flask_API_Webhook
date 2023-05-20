@@ -14,7 +14,7 @@ def home():
 @app.route("/hooks")
 @login_required
 def hooks():
-    lista_hooks = Webhook.query.all()
+    lista_hooks = Webhook.query.order_by(Webhook.data_evento.desc()).limit(200).all()
     lista_teste = Json.query.all()
     return render_template('hooks.html', lista_hooks=lista_hooks, lista_teste=lista_teste)
 
@@ -63,7 +63,8 @@ def criarconta():
         login_user(usuario)
 
         flash(f'Conta criada para o e-mail: {form_criarconta.email.data}', 'alert-success')
-        return redirect(url_for('home'))
+
+        return redirect(url_for('hooks'))
     return render_template('criarconta.html', form_criarconta=form_criarconta)
 
 
