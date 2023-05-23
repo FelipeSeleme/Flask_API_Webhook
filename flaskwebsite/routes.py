@@ -1,9 +1,10 @@
+import json
+import jsonschema
 from flask import render_template, redirect, url_for, flash, request, abort
+from flask_login import login_user, logout_user, login_required
 from flaskwebsite import app, database, bcrypt
 from flaskwebsite.forms import FormLogin, FormCriarConta, FormPesquisa
 from flaskwebsite.models import Usuario, Webhook, Json
-from flask_login import login_user, logout_user, login_required
-import json
 
 
 @app.route("/")
@@ -78,46 +79,62 @@ def sair():
 
 @app.route('/teste', methods=['POST'])
 def webhook():
-    # if request.method == 'POST':
-    try:
-        if request.is_json:
-            # wh_data = request.json
-            wh_data = request.get_json()
-        else:
-            wh_data = request.data.decode('utf-8')
-            wh_data = json.loads(wh_data)
+    if request.method == 'POST':
+        try:
+            if request.content_type != 'application/json':
+                abort(400, "Apenas arquivos JSON são aceitos como entrada.")
 
-        # teste = Json(json=str(wh_data))
+            if request.is_json:
+                wh_data = request.get_json()
+            else:
+                wh_data = request.data.decode('utf-8')
+                wh_data = json.loads(wh_data)
 
-        nome = wh_data.get('nome')
-        email = wh_data.get('email')
-        email = email.lower()
-        status = wh_data.get('status')
+            schema = {
+                "type": "object",
+                "properties": {
+                    "nome": {"type": "string"},
+                    "email": {"type": "string", "format": "email"},
+                    "status": {"type": "string", "enum": ["aprovado", "recusado", "reembolsado"]},
+                    "valor": {"type": ["number", "integer"]},
+                    "forma_pagamento": {"type": "string"},
+                    "parcelas": {"type": "integer"}
+                },
+                "required": ["nome", "email", "status", "valor", "forma_pagamento", "parcelas"]
+            }
 
-        if status == 'aprovado':
-            print(f"Liberar acesso do e-mail: {email}")
-            print(f"Bem-vindo, {nome}!")
-            evento = f"✔️ Acesso liberardo para: {email} | Mensagem de boas-vindas enviada para {nome}."
-        elif status == 'recusado':
-            print(
-                f"Olá {nome}! Ocorreu algum problema no pagamento. Revise os dados ou insira uma nova forma de pagamento.")
-            evento = f"⚠️ Aviso de revisão da forma de pagamento enviado para {nome}."
-        elif status == 'reembolsado':
-            print("Acesso cancelado.")
-            evento = "⛔ Acesso cancelado."
-        else:
-            evento = "Nenhuma ação tomada."
+            jsonschema.validate(wh_data, schema)
 
-        wh = Webhook(nome=nome,
-                     email=email,
-                     status=status,
-                     valor=wh_data['valor'],
-                     forma_pagamento=wh_data['forma_pagamento'],
-                     parcelas=wh_data['parcelas'],
-                     evento=evento)
-        database.session.add(wh)
-        # database.session.add(teste)
-        database.session.commit()
-        return 'success', 200
-    except Exception as e:
-        abort(400, str(e))
+            nome = wh_data.get('nome')
+            email = wh_data.get('email')
+            email = email.lower()
+            status = wh_data.get('status')
+
+            if status == 'aprovado':
+                print(f"Liberar acesso do e-mail: {email}")
+                print(f"Bem-vindo, {nome}!")
+                evento = f"✔️ Acesso liberado para: {email} | Mensagem de boas-vindas enviada para {nome}."
+            elif status == 'recusado':
+                print(f"Olá {nome}! Ocorreu algum problema no pagamento. Revise os dados ou insira uma nova forma de pagamento.")
+                evento = f"⚠️ Aviso de revisão da forma de pagamento enviado para {nome}."
+            elif status == 'reembolsado':
+                print("Acesso cancelado.")
+                evento = "⛔ Acesso cancelado."
+            else:
+                evento = "Nenhuma ação tomada."
+
+            wh = Webhook(nome=nome,
+                         email=email,
+                         status=status,
+                         valor=wh_data['valor'],
+                         forma_pagamento=wh_data['forma_pagamento'],
+                         parcelas=wh_data['parcelas'],
+                         evento=evento)
+            database.session.add(wh)
+            database.session.commit()
+            return 'success', 200
+        except jsonschema.ValidationError as e:
+            abort(400, "Dados de entrada inválidos: " + str(e))
+        except Exception as e:
+            abort(400, str(e))
+
