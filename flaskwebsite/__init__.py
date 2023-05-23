@@ -6,7 +6,7 @@ import os
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = '019465d68989c255b0a1c98487a4e2f9'
+app.config['SECRET_KEY'] = ''  # INSERIR A CHAVE AQUI <<<
 if os.getenv("DATABASE_URL"):
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 else:
