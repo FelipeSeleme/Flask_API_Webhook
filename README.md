@@ -8,9 +8,9 @@ Esse sistema foi desenvolvido em `Python` com `Flask` e `Bootstrap` por Felipe S
 Para utilizar as informações e recursos, é necessário criar uma conta e fazer login.  
   
   
-# Objetivo: Criar uma `API` que receba `Webhooks` de um simulador, fazer as tratativas e armazenar os dados em um banco de dados.  
+## Objetivo: Criar uma `API` que receba `Webhooks` de um simulador, fazer as tratativas e armazenar os dados em um banco de dados.  
   
-  ## Sumário
+  ### Sumário
   [main.py](main.py) - executa a aplicação.
   
   [init](flaskwebsite/__init__.py) - inicializa a aplicação.  
